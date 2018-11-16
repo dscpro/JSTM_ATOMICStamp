@@ -20,7 +20,7 @@ public class AtomicStamped {
 				boolean c1 =atomicStampedRef.compareAndSet(100, 101, atomicStampedRef.getStamp(), atomicStampedRef.getStamp() + 1);
 				System.out.println(c1+"变更一次标记"+atomicStampedRef.getStamp()+" 值:"+atomicStampedRef.getReference());
 				try {
-					TimeUnit.SECONDS.sleep(2);
+					TimeUnit.SECONDS.sleep(5);
 				} catch (InterruptedException e) {
 				}
 				boolean c2 =atomicStampedRef.compareAndSet(101, 100, atomicStampedRef.getStamp(), atomicStampedRef.getStamp() + 1);
