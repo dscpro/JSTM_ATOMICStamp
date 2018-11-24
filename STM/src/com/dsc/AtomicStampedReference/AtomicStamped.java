@@ -25,7 +25,7 @@ public class AtomicStamped {
 				}
 				boolean c2 =atomicStampedRef.compareAndSet(101, 100, atomicStampedRef.getStamp(), atomicStampedRef.getStamp() + 1);
 				System.out.println(c2+"重置标记"+atomicStampedRef.getStamp()+" 值:"+atomicStampedRef.getReference());
-				
+				String name;
 			}
 		});
 
