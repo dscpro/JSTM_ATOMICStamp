@@ -18,10 +18,11 @@ public class AtomicStamp implements AtomicFactory{
 	// AtomicStampedReference(initString,initStamp);
 	//
 	
+	
  
 	@Override
 	public AtomicStamp setAtomicStamp(Object initialRef) {
-		
+		System.out.println(213);
 		atomicStamped= new AtomicStampedReference(initialRef, initStamp);
 		return this;
 	}
