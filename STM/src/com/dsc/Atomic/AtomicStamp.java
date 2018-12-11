@@ -4,27 +4,33 @@ import java.util.concurrent.atomic.AtomicStampedReference;
 
 public class AtomicStamp implements AtomicFactory{
 	
-	
 	int initStamp=0;
 	Object initialRef;
+	AtomicStamp atomicStampPar;
+	public AtomicStamp getAtomicStampPar() {
+		return atomicStampPar;
+	}
+	public void setAtomicStampPar(AtomicStamp atomicStampPar) {
+		this.atomicStampPar = atomicStampPar;
+	}
+	
 	public AtomicStamp() {
 		 
 	}
 	public AtomicStamp(Object initialRef) {
 		 this.initialRef=initialRef;
 	}
-	private  AtomicStampedReference atomicStamped; //= new AtomicStampedReference(initValue,initStamp);
+	private  AtomicStampedReference atomicStamped; 
+	//= new AtomicStampedReference(initValue,initStamp);
 	// private static AtomicStampedReference atomicStampedStr = new
 	// AtomicStampedReference(initString,initStamp);
 	//
 	
-	
- 
 	@Override
-	public AtomicStamp setAtomicStamp(Object initialRef) {
-		System.out.println(213);
+	public void setAtomicStamp(Object initialRef) {
+		
 		atomicStamped= new AtomicStampedReference(initialRef, initStamp);
-		return this;
+		//return this;
 	}
 	@Override
 	public AtomicStampedReference getAtomicStamp() {
