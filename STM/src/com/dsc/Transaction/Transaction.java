@@ -51,6 +51,10 @@ public class Transaction {
 
 	protected static final ThreadLocal<Transaction> current = new ThreadLocal<Transaction>();
 
+	public static ThreadLocal<Transaction> getCurrent() {
+		return current;
+	}
+
 	/**
 	 * 开启事务
 	 */
@@ -74,6 +78,8 @@ public class Transaction {
 
 		 Transaction tx = current.get();
 	     
+		 
+		  
 //		 
 //		 boolean flag = atomicS.getAtomicStampedRef().compareAndSet("董士程", "邵帅", 0,
 //				 atomicS.getAtomicStampedRef().getStamp() + 1);
@@ -83,7 +89,8 @@ public class Transaction {
 			 rollBackTransaction();
 		 else{
 			 atomicS.setState(2);
-			 System.out.println(atomicS.getAtomicStampedRef());
+			 System.out.println("事务---"+tx.getNumber()+"---提交成功，值为："+atomicS.getAtomicStampedRef().getReference()
+					 +"Stamp值："+atomicS.getAtomicStampedRef().getStamp());
 		 }
 	}
 
