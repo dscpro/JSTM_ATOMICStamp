@@ -70,16 +70,21 @@ public class Transaction {
 	/**
 	 * 提交事务
 	 */
-	public void commitTransaction() {
+	public void commitTransaction(Object x) {
 
-		Transaction tx = current.get();
-
-		// tx.commitTx(true);
-		// if(atomicS.getState()==2)
-		// rollBackTransaction();
-		// else{
-		// atomicS.getAtomicStampedRef();
-		// }
+		 Transaction tx = current.get();
+	     
+//		 
+//		 boolean flag = atomicS.getAtomicStampedRef().compareAndSet("董士程", "邵帅", 0,
+//				 atomicS.getAtomicStampedRef().getStamp() + 1);
+//		 
+		 		 
+		 if(atomicS.getState()==2)
+			 rollBackTransaction();
+		 else{
+			 atomicS.setState(2);
+			 System.out.println(atomicS.getAtomicStampedRef());
+		 }
 	}
 
 	/**
@@ -88,15 +93,6 @@ public class Transaction {
 
 	public void updateTransaction(Object newReference) {
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		//
@@ -123,10 +119,6 @@ public class Transaction {
 
 	public void rollBackTransaction() {
 
-		
-		
-		
-		
 		
 		
 		
