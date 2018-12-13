@@ -2,7 +2,7 @@ package com.dsc.Atomic;
 
 import java.util.concurrent.atomic.AtomicStampedReference;
 
-public class AtomicStamp implements AtomicFactory{
+public class AtomicStamp  {
 	/**
 	 * 邮标值，ref改变时改变
 	 */
@@ -13,9 +13,15 @@ public class AtomicStamp implements AtomicFactory{
 	 */
 	Object initialRef;
 	/**
-	 * 当前类事务状态  0 初始  1  更改   2已提交
+	 * 当前类   事务状态  0 初始  1  更改中    2已提交  
 	 */
-    int state;
+    int state=0;
+    public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
 	
     /**
 	 *  父结点  未更改前的
@@ -35,12 +41,7 @@ public class AtomicStamp implements AtomicFactory{
 	public void setInitialRef(Object initialRef) {
 		this.initialRef = initialRef;
 	}
-	public int getState() {
-		return state;
-	}
-	public void setState(int state) {
-		this.state = state;
-	}
+	
 	public AtomicStamp getAtomicStampPar() {
 		return atomicStampPar;
 	}
@@ -53,24 +54,41 @@ public class AtomicStamp implements AtomicFactory{
 	}
 	public AtomicStamp(Object initialRef) {
 		 this.initialRef=initialRef;
+		 this.setAtomicStampedRef();
 	}
-	private  AtomicStampedReference atomicStamped; 
+	/**
+	 * AtomicStampedReference
+	 */
+	private  AtomicStampedReference<Object> atomicStampedRef ;
+	/**
+	 * 获取AtomicStampedReference
+	 * @return
+	 */
+	public AtomicStampedReference<Object> getAtomicStampedRef() {
+		return atomicStampedRef;
+	}
+	public void setAtomicStampedRef() {
+		this.atomicStampedRef = new AtomicStampedReference<Object>(initialRef, stampValue);
+	} 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//= new AtomicStampedReference(initValue,initStamp);
 	// private static AtomicStampedReference atomicStampedStr = new
 	// AtomicStampedReference(initString,initStamp);
 	//
 	
-	@Override
-	public void setAtomicStamp(Object initialRef) {
-		
-		atomicStamped= new AtomicStampedReference(initialRef, stampValue);
-		//return this;
-	}
-	@Override
-	public AtomicStampedReference getAtomicStamp() {
-		// TODO Auto-generated method stub
-		return this.atomicStamped;
-	}
+ 
 
 	 
 }

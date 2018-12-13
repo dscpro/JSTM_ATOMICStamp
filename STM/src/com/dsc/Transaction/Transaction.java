@@ -1,84 +1,235 @@
 package com.dsc.Transaction;
 
- 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicStampedReference;
+
+import com.dsc.Atomic.AtomicStamp;
+
 public class Transaction {
-	protected static final ThreadLocal<Transaction> current = new ThreadLocal<Transaction>();
-	
-	protected final Transaction parentTra;
-	
 	protected int number;
-	
+	protected final Transaction parent;
+
+	protected Transaction getParent() {
+		return parent;
+	}
+
+	public Transaction(Transaction parent, int number) {
+		this.parent = parent;
+		this.number = number;
+	}
+
 	public Transaction(int number) {
-        this(null, number);
-    }
-	public Transaction(Transaction parentTra, int number) {
-	        this.parentTra = parentTra;
-	        this.number = number;
-	}
-	
-	/** 获取当前事务
-	*/
-	public static Transaction getCurrentTransaction() {
-
-		return current.get();
+		this(null, number);
 	}
 
-	/**开启事务
-	 * 
-	 * 
-	 */
-	public static Transaction startTransaction() {
-
-		Transaction tx = null;
-
-		tx = new UpdateTransaction(1);
-
-		tx.start();
-		return tx;
+	public Transaction(Transaction parent) {
+		this(parent, parent.getNumber());
 	}
 
-	/** 提交事务
-	 * 
-	 */
-	public static void commitTransaction() {
-
-		Transaction tx = current.get();
-        tx.commitTx(true);
+	public int getNumber() {
+		return number;
 	}
-	public void commitTx(boolean finishAlso) {
-        //doCommit();
 
-        if (finishAlso) {
-            finishTx();
-        }
-    }
-	private void finishTx() {
-        finish();
-
-        current.set(this.getParent());
-    }
-	 protected static void finish() {
-	        // intentionally empty
-	    }
-	 /**关闭事务
-	  * 
-	  */
-	public static void closeTransaction() {
-		
+	protected void setNumber(int number) {
+		this.number = number;
 	}
 
 	/**
-	 * 回滚
-	 * 
+	 * AtomicStamp类
 	 */
-	public static void rollBackTransaction() {
+	public AtomicStamp atomicS;
+
+	public AtomicStamp getAtomicS() {
+		return atomicS;
+	}
+
+	public void setAtomicS(AtomicStamp atomicS) {
+		this.atomicS = atomicS;
+	}
+
+	protected static final ThreadLocal<Transaction> current = new ThreadLocal<Transaction>();
+
+	/**
+	 * 开启事务
+	 */
+	public void startTransaction() {
+
+		Transaction parent = current.get();
+		
+		if (parent == null) {
+			current.set(this);
+		}
+		current.set(this);
+
+		// setAtomicS(atomicS);
+
+	}
+
+	/**
+	 * 提交事务
+	 */
+	public void commitTransaction() {
+
+		Transaction tx = current.get();
+
+		// tx.commitTx(true);
+		// if(atomicS.getState()==2)
+		// rollBackTransaction();
+		// else{
+		// atomicS.getAtomicStampedRef();
+		// }
+	}
+
+	/**
+	 * 操作事务
+	 */
+
+	public void updateTransaction(Object newReference) {
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//
+		// AtomicStampedReference<Object> atomicStampedRef
+		// =atomicS.getAtomicStampedRef();
+		// boolean flag=
+		// atomicStampedRef.compareAndSet(atomicStampedRef.getReference(),
+		// newReference,
+		// atomicStampedRef.getStamp(), atomicStampedRef.getStamp());
+		// if(flag){
+		// commitTransaction();
+		// //设置提交状态
+		// atomicS.setState(2);
+		// }else{
+		//
+		// rollBackTransaction();
+		// }
+
+	}
+
+	/**
+	 * 回滚事务
+	 */
+
+	public void rollBackTransaction() {
+
+		
+		
+		
+		
+		
+		
 		
 	}
 
-	public  void  start() {
-		current.set(this);
+	protected static ExecutorService threadPool = Executors
+			.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2, new ThreadFactory() {
+				@Override
+				public Thread newThread(Runnable r) {
+					Thread t = new Thread(r);
+					t.setDaemon(true);
+					return t;
+				}
+			});
+
+	public void initThreadPool(int numberThreads) {
+		threadPool = Executors.newFixedThreadPool(numberThreads, new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				Thread t = new Thread(r);
+				t.setDaemon(true);
+				return t;
+			}
+		});
 	}
-	protected  Transaction getParent() {
-        return parentTra;
-    }
+	// protected static final ThreadLocal<Transaction> current = new
+	// ThreadLocal<Transaction>();
+	//
+	// protected final Transaction parentTra;
+	//
+	// protected int number;
+	//
+	// public Transaction(int number) {
+	// this(null, number);
+	// }
+	// public Transaction(Transaction parentTra, int number) {
+	// this.parentTra = parentTra;
+	// this.number = number;
+	// }
+	//
+	// /** 获取当前事务
+	// */
+	// public static Transaction getCurrentTransaction() {
+	//
+	// return current.get();
+	// }
+	//
+	// /**开启事务
+	// *
+	// *
+	// */
+	// public static Transaction startTransaction() {
+	//
+	// Transaction tx = null;
+	//
+	// tx = new UpdateTransaction(1);
+	//
+	// tx.start();
+	// return tx;
+	// }
+	//
+	// /** 提交事务
+	// *
+	// */
+	// public static void commitTransaction() {
+	//
+	// Transaction tx = current.get();
+	// tx.commitTx(true);
+	// }
+	// public void commitTx(boolean finishAlso) {
+	// //doCommit();
+	//
+	// if (finishAlso) {
+	// finishTx();
+	// }
+	// }
+	// private void finishTx() {
+	// finish();
+	//
+	// current.set(this.getParent());
+	// }
+	// protected static void finish() {
+	// // intentionally empty
+	// }
+	// /**关闭事务
+	// *
+	// */
+	// public static void closeTransaction() {
+	//
+	// }
+	//
+	// /**
+	// * 回滚
+	// *
+	// */
+	// public static void rollBackTransaction() {
+	//
+	// }
+	//
+	// public void start() {
+	// current.set(this);
+	// }
+	// protected Transaction getParent() {
+	// return parentTra;
+	// }
 }
