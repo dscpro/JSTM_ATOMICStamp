@@ -78,8 +78,6 @@ public class Transaction {
 
 		 Transaction tx = current.get();
 	     
-		 
-		  
 //		 
 //		 boolean flag = atomicS.getAtomicStampedRef().compareAndSet("董士程", "邵帅", 0,
 //				 atomicS.getAtomicStampedRef().getStamp() + 1);
@@ -87,6 +85,7 @@ public class Transaction {
 		 		 
 		 if(atomicS.getState()==2)
 			 rollBackTransaction();
+		 		
 		 else{
 			 atomicS.setState(2);
 			 System.out.println("事务---"+tx.getNumber()+"---提交成功，值为："+atomicS.getAtomicStampedRef().getReference()
@@ -125,8 +124,10 @@ public class Transaction {
 	 */
 
 	public void rollBackTransaction() {
-
-		
+		 
+		 Transaction tx = current.get();
+		 System.out.println("事务---"+tx.getNumber()+"---提交失败，值为："+atomicS.getAtomicStampedRef().getReference()
+				 +"Stamp值："+atomicS.getAtomicStampedRef().getStamp());
 		
 		
 	}
