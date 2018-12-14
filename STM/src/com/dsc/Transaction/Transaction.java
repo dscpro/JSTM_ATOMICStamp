@@ -47,6 +47,7 @@ public class Transaction {
 
 	public void setAtomicS(AtomicStamp atomicS) {
 		this.atomicS = atomicS;
+		
 	}
 
 	protected static final ThreadLocal<Transaction> current = new ThreadLocal<Transaction>();
@@ -63,7 +64,9 @@ public class Transaction {
 		Transaction parent = current.get();
 		
 		if (parent == null) {
+			
 			current.set(this);
+			
 		}
 		current.set(this);
 
@@ -74,7 +77,7 @@ public class Transaction {
 	/**
 	 * 提交事务
 	 */
-	public void commitTransaction(Object x) {
+	public void commitTransaction(boolean x) {
 
 		 Transaction tx = current.get();
 	     
@@ -83,13 +86,14 @@ public class Transaction {
 //				 atomicS.getAtomicStampedRef().getStamp() + 1);
 //		 
 		 		 
-		 if(atomicS.getState()==2)
+		 if(atomicS.getState()==2 || !x)
+			 
 			 rollBackTransaction();
-		 		
+		 	 	
 		 else{
 			 atomicS.setState(2);
-			 System.out.println("事务---"+tx.getNumber()+"---提交成功，值为："+atomicS.getAtomicStampedRef().getReference()
-					 +"Stamp值："+atomicS.getAtomicStampedRef().getStamp());
+			 System.out.println("事务---"+tx.getNumber()+"---提交成功，值为："+tx.getAtomicS().getAtomicStampedRef().getReference()
+					 +"Stamp值："+tx.getAtomicS().getAtomicStampedRef().getStamp());
 		 }
 	}
 
@@ -126,8 +130,11 @@ public class Transaction {
 	public void rollBackTransaction() {
 		 
 		 Transaction tx = current.get();
-		 System.out.println("事务---"+tx.getNumber()+"---提交失败，值为："+atomicS.getAtomicStampedRef().getReference()
-				 +"Stamp值："+atomicS.getAtomicStampedRef().getStamp());
+		 
+		 //tx.setAtomicS(atomicS.getAtomicStampPar()); 
+		 
+		 System.out.println("事务---"+tx.getNumber()+"---提交失败，值为："+tx.getAtomicS().getAtomicStampPar().getAtomicStampedRef().getReference()	
+				 +"Stamp值："+tx.getAtomicS().getAtomicStampPar().getAtomicStampedRef().getStamp());
 		
 		
 	}
