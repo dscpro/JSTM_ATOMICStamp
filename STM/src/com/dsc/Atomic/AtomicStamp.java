@@ -45,8 +45,8 @@ public class AtomicStamp  {
 	public AtomicStamp getAtomicStampPar() {
 		return atomicStampPar;
 	}
-	public void setAtomicStampPar(AtomicStamp atomicStampPar) {
-		this.atomicStampPar = atomicStampPar;
+	public void setAtomicStampPar( ) {
+		this.atomicStampPar = this;
 	}
 	
 	public AtomicStamp() {
@@ -55,6 +55,7 @@ public class AtomicStamp  {
 	public AtomicStamp(Object initialRef) {
 		 this.initialRef=initialRef;
 		 this.setAtomicStampedRef();
+		 this.setAtomicStampPar();
 	}
 	/**
 	 * AtomicStampedReference

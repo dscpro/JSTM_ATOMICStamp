@@ -3,7 +3,7 @@ package com.dsc.Transaction;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicStampedReference;
+ 
 
 import com.dsc.Atomic.AtomicStamp;
 
@@ -77,21 +77,17 @@ public class Transaction {
 	/**
 	 * 提交事务
 	 */
-	public void commitTransaction(boolean x) {
+	public void commitTransaction(boolean flag) {
 
 		 Transaction tx = current.get();
 	     
-//		 
-//		 boolean flag = atomicS.getAtomicStampedRef().compareAndSet("董士程", "邵帅", 0,
-//				 atomicS.getAtomicStampedRef().getStamp() + 1);
-//		 
-		 		 
-		 if(atomicS.getState()==2 || !x)
+  
+		 if(tx.getAtomicS().getState()==2 || !flag)
 			 
 			 rollBackTransaction();
 		 	 	
 		 else{
-			 atomicS.setState(2);
+			 tx.getAtomicS().setState(2);
 			 System.out.println("事务---"+tx.getNumber()+"---提交成功，值为："+tx.getAtomicS().getAtomicStampedRef().getReference()
 					 +"Stamp值："+tx.getAtomicS().getAtomicStampedRef().getStamp());
 		 }
@@ -101,26 +97,16 @@ public class Transaction {
 	 * 操作事务
 	 */
 
-	public void updateTransaction(Object newReference) {
+	public boolean updateTransaction(Object newReference) {
 
+		 Transaction tx = current.get();
+ 	 
+		 boolean flag = tx.getAtomicS().getAtomicStampedRef().compareAndSet(tx.getAtomicS().getAtomicStampedRef().getReference(), newReference.toString(), 0,
+				 tx.getAtomicS().getAtomicStampedRef().getStamp() + 1);
 		
-		
-		//
-		// AtomicStampedReference<Object> atomicStampedRef
-		// =atomicS.getAtomicStampedRef();
-		// boolean flag=
-		// atomicStampedRef.compareAndSet(atomicStampedRef.getReference(),
-		// newReference,
-		// atomicStampedRef.getStamp(), atomicStampedRef.getStamp());
-		// if(flag){
-		// commitTransaction();
-		// //设置提交状态
-		// atomicS.setState(2);
-		// }else{
-		//
-		// rollBackTransaction();
-		// }
-
+		 
+		 return flag;
+		 
 	}
 
 	/**
@@ -147,7 +133,7 @@ public class Transaction {
 					t.setDaemon(true);
 					return t;
 				}
-			});
+			}); 
 
 	public void initThreadPool(int numberThreads) {
 		threadPool = Executors.newFixedThreadPool(numberThreads, new ThreadFactory() {
