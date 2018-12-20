@@ -51,7 +51,10 @@ public class AtomicStamp  {
 	public void setAtomicStampPar(AtomicStamp atomicStampPar) {
 		this.atomicStampPar = atomicStampPar;
 	}
-	
+	public AtomicStamp(Object initialRef) {		 
+		this.initialRef=initialRef;
+		this.setAtomicStampedRef();	 
+	}
 	
 	public AtomicStamp(Object initialRef,int stamp) {
 		this.stampValue=stamp;
