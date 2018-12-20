@@ -16,7 +16,7 @@ public class TraDemo {
 			@Override
 			public void run() {
 				T1 t1= new T1();
-	 			t1.run(asd);
+				t1.run(asd);
 				
 			}
 		});
@@ -31,13 +31,7 @@ public class TraDemo {
 		refT1.start();
 		refT2.start();
 		
-//		try {
-//			TimeUnit.SECONDS.sleep(5);
-//			System.out.println(
-//					asd.getAtomicStampedRef().getReference() + "---------" + asd.getAtomicStampedRef().getStamp());
-//
-//		} catch (InterruptedException e) {
-//		}
+
 	}
 }
 class T1 {
@@ -46,24 +40,25 @@ class T1 {
 	public void run(AtomicStamp asd){
 	Transaction t1 = new Transaction(1);
 	
-	t1.setAtomicS(asd);
- 
+	//t1.setAtomicS(asd);
+	//System.out.println(asd.getAtomicStampedRef().getReference().toString());
+	AtomicStamp asd1=new AtomicStamp(asd,t1);
+	//System.out.println(asd.getAtomicStampedRef().getReference().toString());
 	System.out.println("开启事务1");
 	t1.startTransaction();
-//	try {
-//		TimeUnit.SECONDS.sleep(4);
-//	} catch (InterruptedException e) {
-//	}
-//	ThreadLocal<Transaction> currentT1 = Transaction.getCurrent();
-//	//System.out.println("事务1  值："+currentT1.get().getAtomicS().getAtomicStampedRef().getReference().toString());
-//	
-//	AtomicStamp asd1=asd;	
-////	asd.setAtomicStampPar(asd1);
-//	boolean flag = asd1.getAtomicStampedRef().compareAndSet("董士程", "邵帅", 0,
-//			asd1.getAtomicStampedRef().getStamp() + 1);
-//	System.out.println("T1" + flag);
-//	
-	boolean flag =	t1.updateTransaction("刘欢");
+	try {
+		TimeUnit.SECONDS.sleep(5);
+	} catch (InterruptedException e) {
+	}
+	Transaction currentT1 = Transaction.getCurrent();
+	System.out.println("事务1  值："+currentT1.getAtomicS().getAtomicStampedRef().getReference());
+	
+	//AtomicStamp asd1=asd;	
+	
+	boolean flag = asd1.getAtomicStampedRef().compareAndSet("董士程", "邵帅", 0,
+			asd1.getAtomicStampedRef().getStamp() + 1);
+	System.out.println("T1" + flag);
+	
 	t1.commitTransaction(flag);
 
 	}
@@ -75,14 +70,29 @@ class T2 {
 	public void run(AtomicStamp asd){
 		
 		Transaction t2 = new Transaction(2);
-		t2.setAtomicS(asd);
+		//t2.setAtomicS(asd);
 		
 		System.out.println("开启事务2");
 		t2.startTransaction();
+		AtomicStamp asd2=new AtomicStamp(asd,t2);
+		//System.out.println("sds"+asd.getAtomicStampedRef().getReference());
+		//System.out.println("ss"+asd2.getAtomicStampedRef().getReference());
+		try {
+			TimeUnit.SECONDS.sleep(2);
+		} catch (InterruptedException e) {
+		}
 		
-		//ThreadLocal<Transaction> currentT2 = Transaction.getCurrent();
-		boolean flag =	t2.updateTransaction("邵帅");
-		t2.commitTransaction(flag);
-
+		Transaction currentT2 = Transaction.getCurrent();
+		System.out.println("事务2  值："+currentT2.getAtomicS().getAtomicStampedRef().getReference());
+		//AtomicStamp asd2=asd;
+		boolean flag1 = asd2.getAtomicStampedRef().compareAndSet("董士程", "刘欢", 0,
+				asd2.getAtomicStampedRef().getStamp() + 1);				
+		
+		System.out.println("T2" + flag1);
+		try {
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e) {
+		}
+		t2.commitTransaction(flag1);	
 	}
 }
