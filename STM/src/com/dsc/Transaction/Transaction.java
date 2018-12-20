@@ -107,10 +107,9 @@ public class Transaction {
 	public void commitTransaction(AtomicStamp num) {
 		 boolean flag;
 		 Transaction tx = current.get();
-		 flag=num.getAtomicStampedRef().compareAndSet(num.getAtomicStampedRef().getReference(), tx.getTail(), 
-				 num.getStampValue(), num.getStampValue()+1);
-		 System.out.println("zhi"+num.getAtomicStampedRef().getReference());
-		 System.out.println("youchuo"+num.getStampValue());
+		 flag=num.getAtomicStampedRef().compareAndSet(num.getAtomicStampedRef().getReference(), tx.getTail(),
+				num.getAtomicStampedRef().getStamp(), num.getAtomicStampedRef().getStamp()+1);
+		 
 		 //System.out.println(flag);
 //		 if(flag){
 //			 num.setState(2);

@@ -40,11 +40,11 @@ public class Test03 {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			//while(true){
+			while(true){
 				
 				data.increase();
 				
-		//}	
+		}	
 	}
 	}
 	
@@ -65,7 +65,7 @@ public class Test03 {
 				data.isEqual();
 				//Transaction.commit();
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
