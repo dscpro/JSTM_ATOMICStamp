@@ -2,12 +2,15 @@ package com.dsc.Atomic;
 
 import java.util.concurrent.atomic.AtomicStampedReference;
 
+import com.dsc.Transaction.Transaction;
+
 public class AtomicStamp  {
 	/**
 	 * 邮标值，ref改变时改变
 	 */
-	int stampValue=0;
-	
+	int stampValue;
+	Transaction t;
+	AtomicStamp stamp;
 	/**
 	 * ref
 	 */
@@ -49,17 +52,31 @@ public class AtomicStamp  {
 		this.atomicStampPar = atomicStampPar;
 	}
 	
-	public AtomicStamp() {
-		 
-	}
-	public AtomicStamp(Object initialRef) {
-		 this.initialRef=initialRef;
-		 this.setAtomicStampedRef();
+	
+	public AtomicStamp(Object initialRef,int stamp) {
+		this.stampValue=stamp;
+		this.initialRef=initialRef;
+		this.setAtomicStampedRef();	 
+	}	
+	public AtomicStamp(Object initialRef,Transaction t,int stamp) {
+		this.stampValue=stamp;
+		this.initialRef=initialRef;
+		this.setAtomicStampedRef();	
+		this.t=t;
+		t.setAtomicS(this);
+	}	
+	public AtomicStamp(AtomicStamp initialRef,Transaction t) {	
+		
+		this.t=t;
+		t.setAtomicS(initialRef);
+		this.stamp=initialRef.stamp;
+		this.atomicStampedRef=initialRef.atomicStampedRef;
+		//this.setAtomicStampedRef();
 	}
 	/**
 	 * AtomicStampedReference
 	 */
-	private  AtomicStampedReference<Object> atomicStampedRef ;
+	private  AtomicStampedReference<Object> atomicStampedRef;
 	/**
 	 * 获取AtomicStampedReference
 	 * @return
@@ -71,23 +88,21 @@ public class AtomicStamp  {
 		this.atomicStampedRef = new AtomicStampedReference<Object>(initialRef, stampValue);
 	} 
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//= new AtomicStampedReference(initValue,initStamp);
-	// private static AtomicStampedReference atomicStampedStr = new
-	// AtomicStampedReference(initString,initStamp);
-	//
-	
+	public void put(Object newE){
+		Transaction tx=Transaction.getCurrent(); 
+		if(tx==null){
+			
+			tx=new Transaction(1);
+			tx.startTransaction();
+			tx.setStampValue(newE);
+			//tx.commitTransaction(this);
+		}else{
+			tx.setStampValue(newE);
+			//tx.commitTransaction(this);
+		}
+		tx.commitTransaction(this);
+		
+	}
  
 
 	 

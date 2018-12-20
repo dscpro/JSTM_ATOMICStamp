@@ -1,8 +1,12 @@
 package com.dsc.Transaction;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicStampedReference;
 
 import com.dsc.Atomic.AtomicStamp;
@@ -10,7 +14,8 @@ import com.dsc.Atomic.AtomicStamp;
 public class Transaction {
 	protected int number;
 	protected final Transaction parent;
-
+	protected ConcurrentHashMap<AtomicInteger,Object> localMap=new ConcurrentHashMap<AtomicInteger,Object>();
+	protected static final AtomicInteger version=new AtomicInteger(0);
 	protected Transaction getParent() {
 		return parent;
 	}
@@ -18,6 +23,8 @@ public class Transaction {
 	public Transaction(Transaction parent, int number) {
 		this.parent = parent;
 		this.number = number;
+		
+		
 	}
 
 	public Transaction(int number) {
@@ -51,8 +58,11 @@ public class Transaction {
 
 	protected static final ThreadLocal<Transaction> current = new ThreadLocal<Transaction>();
 
-	public static ThreadLocal<Transaction> getCurrent() {
-		return current;
+	public static Transaction getCurrent() {
+		return current.get();
+	}
+	public void beginTransaction(){
+		
 	}
 
 	/**
@@ -65,8 +75,9 @@ public class Transaction {
 		if (parent == null) {
 			current.set(this);
 		}
-		current.set(this);
-
+		//current.set(this);
+		
+		
 		// setAtomicS(atomicS);
 
 	}
@@ -74,16 +85,16 @@ public class Transaction {
 	/**
 	 * 提交事务
 	 */
-	public void commitTransaction(Object x) {
+	public void commitTransaction(boolean flag) {
 
 		 Transaction tx = current.get();
-	     
-//		 
+		 
+		 
 //		 boolean flag = atomicS.getAtomicStampedRef().compareAndSet("董士程", "邵帅", 0,
 //				 atomicS.getAtomicStampedRef().getStamp() + 1);
 //		 
 		 		 
-		 if(atomicS.getState()==2)
+		 if(atomicS.getState()==2||!flag)
 			 rollBackTransaction();
 		 		
 		 else{
@@ -92,30 +103,28 @@ public class Transaction {
 					 +"Stamp值："+atomicS.getAtomicStampedRef().getStamp());
 		 }
 	}
-
+	//写事务
+	public void commitTransaction(AtomicStamp num) {
+		 boolean flag;
+		 Transaction tx = current.get();
+		 flag=num.getAtomicStampedRef().compareAndSet(num.getAtomicStampedRef().getReference(), tx.getTail(), 
+				 num.getStampValue(), num.getStampValue()+1);
+		 System.out.println("zhi"+num.getAtomicStampedRef().getReference());
+		 System.out.println("youchuo"+num.getStampValue());
+		 //System.out.println(flag);
+//		 if(flag){
+//			 num.setState(2);
+//		 }else{
+//			 tx.rollBackTransaction();
+//		 }
+		 
+	}
 	/**
 	 * 操作事务
 	 */
 
 	public void updateTransaction(Object newReference) {
-
 		
-		
-		//
-		// AtomicStampedReference<Object> atomicStampedRef
-		// =atomicS.getAtomicStampedRef();
-		// boolean flag=
-		// atomicStampedRef.compareAndSet(atomicStampedRef.getReference(),
-		// newReference,
-		// atomicStampedRef.getStamp(), atomicStampedRef.getStamp());
-		// if(flag){
-		// commitTransaction();
-		// //设置提交状态
-		// atomicS.setState(2);
-		// }else{
-		//
-		// rollBackTransaction();
-		// }
 
 	}
 
@@ -126,12 +135,27 @@ public class Transaction {
 	public void rollBackTransaction() {
 		 
 		 Transaction tx = current.get();
-		 System.out.println("事务---"+tx.getNumber()+"---提交失败，值为："+atomicS.getAtomicStampedRef().getReference()
-				 +"Stamp值："+atomicS.getAtomicStampedRef().getStamp());
-		
+//		 System.out.println("事务---"+tx.getNumber()+"---提交失败，值为："+atomicS.getAtomicStampedRef().getReference()
+//				 +"Stamp值："+atomicS.getAtomicStampedRef().getStamp());
+//		
 		
 	}
-
+	
+	public void setStampValue(Object newE){
+		
+		localMap.put(version, newE);
+		version.incrementAndGet();
+		
+	}
+	//获取最后提交的值
+	protected Object getTail(){
+		Iterator<Entry<AtomicInteger, Object>> iterator = localMap.entrySet().iterator();
+	    Entry<AtomicInteger, Object> tail = null;
+	    while (iterator.hasNext()) {
+	        tail = iterator.next();
+	    }
+	    return tail.getValue();
+	}
 	protected static ExecutorService threadPool = Executors
 			.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2, new ThreadFactory() {
 				@Override
@@ -152,84 +176,5 @@ public class Transaction {
 			}
 		});
 	}
-	// protected static final ThreadLocal<Transaction> current = new
-	// ThreadLocal<Transaction>();
-	//
-	// protected final Transaction parentTra;
-	//
-	// protected int number;
-	//
-	// public Transaction(int number) {
-	// this(null, number);
-	// }
-	// public Transaction(Transaction parentTra, int number) {
-	// this.parentTra = parentTra;
-	// this.number = number;
-	// }
-	//
-	// /** 获取当前事务
-	// */
-	// public static Transaction getCurrentTransaction() {
-	//
-	// return current.get();
-	// }
-	//
-	// /**开启事务
-	// *
-	// *
-	// */
-	// public static Transaction startTransaction() {
-	//
-	// Transaction tx = null;
-	//
-	// tx = new UpdateTransaction(1);
-	//
-	// tx.start();
-	// return tx;
-	// }
-	//
-	// /** 提交事务
-	// *
-	// */
-	// public static void commitTransaction() {
-	//
-	// Transaction tx = current.get();
-	// tx.commitTx(true);
-	// }
-	// public void commitTx(boolean finishAlso) {
-	// //doCommit();
-	//
-	// if (finishAlso) {
-	// finishTx();
-	// }
-	// }
-	// private void finishTx() {
-	// finish();
-	//
-	// current.set(this.getParent());
-	// }
-	// protected static void finish() {
-	// // intentionally empty
-	// }
-	// /**关闭事务
-	// *
-	// */
-	// public static void closeTransaction() {
-	//
-	// }
-	//
-	// /**
-	// * 回滚
-	// *
-	// */
-	// public static void rollBackTransaction() {
-	//
-	// }
-	//
-	// public void start() {
-	// current.set(this);
-	// }
-	// protected Transaction getParent() {
-	// return parentTra;
-	// }
+	
 }
