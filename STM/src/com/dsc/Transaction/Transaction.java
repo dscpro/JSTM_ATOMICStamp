@@ -46,7 +46,7 @@ public class Transaction {
 	/**
 	 * AtomicStamp类
 	 */
-	public AtomicStamp atomicS;
+	public static AtomicStamp atomicS;
 
 	public AtomicStamp getAtomicS() {
 		return atomicS;
@@ -61,8 +61,15 @@ public class Transaction {
 	public static Transaction getCurrent() {
 		return current.get();
 	}
-	public void beginTransaction(){
-		
+	public static void beginTransaction(){
+//		Transaction tx=Transaction.getCurrent();
+//		if(tx==null){
+			Transaction tx=new Transaction(1);
+			current.set(tx);
+//		}else{
+//			
+//			current.set(this);
+//		}
 	}
 
 	/**
@@ -75,10 +82,6 @@ public class Transaction {
 		if (parent == null) {
 			current.set(this);
 		}
-		//current.set(this);
-		
-		
-		// setAtomicS(atomicS);
 
 	}
 
@@ -107,16 +110,24 @@ public class Transaction {
 	public void commitTransaction(AtomicStamp num) {
 		 boolean flag;
 		 Transaction tx = current.get();
+		 atomicS=num;
+		 if(atomicS.getState()==2){
+			 rollBackTransaction();
+		 }
 		 flag=num.getAtomicStampedRef().compareAndSet(num.getAtomicStampedRef().getReference(), tx.getTail(),
 				num.getAtomicStampedRef().getStamp(), num.getAtomicStampedRef().getStamp()+1);
-		 
-		 //System.out.println(flag);
+		 num.setState(2);
+		 //System.out.println(flag); 
 //		 if(flag){
 //			 num.setState(2);
 //		 }else{
 //			 tx.rollBackTransaction();
 //		 }
 		 
+	}
+	
+	public static void commitTransaction(){
+		atomicS.setState(1);
 	}
 	/**
 	 * 操作事务

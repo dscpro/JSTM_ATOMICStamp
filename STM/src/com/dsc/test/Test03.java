@@ -1,5 +1,6 @@
 package com.dsc.test;
 import com.dsc.Atomic.*;
+import com.dsc.Transaction.Transaction;
 public class Test03 {
 	//private VBox<Integer> nums1;
 	//private VBox<Integer> nums2;
@@ -18,7 +19,7 @@ public class Test03 {
 		}
 		
 		
-		public  void increase(){
+		public void increase(){
 				
 			    num1.put(i);
 			    num2.put(i);
@@ -41,9 +42,9 @@ public class Test03 {
 		public void run() {
 			// TODO Auto-generated method stub
 			while(true){
-				
+				Transaction.beginTransaction();
 				data.increase();
-				
+				Transaction.commitTransaction();
 		}	
 	}
 	}
