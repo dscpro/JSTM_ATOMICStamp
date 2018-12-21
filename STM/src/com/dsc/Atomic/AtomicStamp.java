@@ -95,9 +95,11 @@ public class AtomicStamp  {
 			tx=new Transaction(1);
 			tx.startTransaction();
 			tx.setStampValue(newE);
+			//this.state=2;
 			//tx.commitTransaction(this);
 		}else{
 			tx.setStampValue(newE);
+			//this.state=2;
 			//tx.commitTransaction(this);
 		}
 		tx.commitTransaction(this);
