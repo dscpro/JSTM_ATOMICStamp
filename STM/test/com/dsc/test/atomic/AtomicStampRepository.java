@@ -13,7 +13,6 @@ public class AtomicStampRepository extends CachableTransactionRepository {
 	 * 邮标值，ref改变时改变
 	 */
 	int stampValue = 0;
-
 	/**
 	 * ref
 	 */
@@ -88,7 +87,7 @@ public class AtomicStampRepository extends CachableTransactionRepository {
 	    if (flag) {
 			transaction.updateVersion();
 			transaction.updateTime();
-		//	this.setOldRef(atomicStampedRef.getReference());
+		 	//this.setOldRef(atomicStampedRef.getReference());
 			return 1;
 		} else {
 			return 0;

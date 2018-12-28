@@ -85,9 +85,7 @@ public class TransactionManager {
                         commitTransaction(transaction);
                     }
                 });
-               // logger.debug("async submit cost time:" + (System.currentTimeMillis() - statTime));
             } catch (Throwable commitException) {
-                //logger.warn("compensable transaction async submit confirm failed, recovery job will try to confirm later.", commitException);
                 throw new ConfirmingException(commitException);
             }
         } else {
@@ -116,7 +114,6 @@ public class TransactionManager {
                     }
                 });
             } catch (Throwable rollbackException) {
-            //    logger.warn("compensable transaction async rollback failed, recovery job will try to rollback later.", rollbackException);
                 throw new CancellingException(rollbackException);
             }
         } else {

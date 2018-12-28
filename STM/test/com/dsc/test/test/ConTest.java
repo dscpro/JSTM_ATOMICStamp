@@ -28,6 +28,11 @@ public class ConTest {
 						+ atomicStamp.getAtomicStampedRef().getStamp());
 			}
 		});
+		
+		
+		
+		
+		
 		Thread refT2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -46,36 +51,99 @@ public class ConTest {
 			}
 		});
 		
+		
+	
+		Thread refT3 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				tm.setTransactionRepository(atomicStamp);
+				tm.begin();
+				tm.getCurrentTransaction().setNewRef("宋成龙");
+				System.out.println("宋成龙" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				tm.commit(false);
+				System.out.println("宋成龙" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				System.out.println("修改后Ref值" + atomicStamp.getAtomicStampedRef().getReference() + "+++Stamp:"
+						+ atomicStamp.getAtomicStampedRef().getStamp());
+			}
+		});
+		Thread refT4 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				tm.setTransactionRepository(atomicStamp);
+				tm.begin();
+				tm.getCurrentTransaction().setNewRef("宋成龙1");
+				System.out.println("宋成龙1" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				tm.commit(false);
+				System.out.println("宋成龙1" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				System.out.println("修改后Ref值" + atomicStamp.getAtomicStampedRef().getReference() + "+++Stamp:"
+						+ atomicStamp.getAtomicStampedRef().getStamp());
+			}
+		});
+
+		Thread refT5 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				tm.setTransactionRepository(atomicStamp);
+				tm.begin();
+				tm.getCurrentTransaction().setNewRef("宋成龙2");
+				System.out.println("宋成龙2" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				tm.commit(false);
+				System.out.println("宋成龙2" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				System.out.println("修改后Ref值" + atomicStamp.getAtomicStampedRef().getReference() + "+++Stamp:"
+						+ atomicStamp.getAtomicStampedRef().getStamp());
+			}
+		});
+
+		Thread refT6 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				tm.setTransactionRepository(atomicStamp);
+				tm.begin();
+				tm.getCurrentTransaction().setNewRef("宋成龙3");
+				System.out.println("宋成龙3" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				tm.commit(false);
+				System.out.println("宋成龙3" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				System.out.println("修改后Ref值" + atomicStamp.getAtomicStampedRef().getReference() + "+++Stamp:"
+						+ atomicStamp.getAtomicStampedRef().getStamp());
+			}
+		});
+
+		Thread refT7 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				tm.setTransactionRepository(atomicStamp);
+				tm.begin();
+				tm.getCurrentTransaction().setNewRef("宋成龙4");
+				System.out.println("宋成龙4" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				tm.commit(false);
+				System.out.println("宋成龙4" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
+						+ tm.getCurrentTransaction().getStatus());
+				System.out.println("修改后Ref值" + atomicStamp.getAtomicStampedRef().getReference() + "+++Stamp:"
+						+ atomicStamp.getAtomicStampedRef().getStamp());
+			}
+		});
+
+	
 		refT1.start();
 		refT2.start();
-		try {
-			TimeUnit.SECONDS.sleep(2);
-		} catch (InterruptedException e) {
-		}
-	    System.out.println(atomicStamp.getOldRef().toString()+atomicStamp.getAtomicStampedRef().getReference());
-
-//		Thread refT3 = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//
-//				tm.setTransactionRepository(atomicStamp);
-//				tm.begin();
-//				tm.getCurrentTransaction().setNewRef("宋成龙");
-//				System.out.println("宋成龙" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
-//						+ tm.getCurrentTransaction().getStatus());
-//				tm.commit(false);
-//				System.out.println("宋成龙" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
-//						+ tm.getCurrentTransaction().getStatus());
-//				System.out.println("修改后Ref值" + atomicStamp.getAtomicStampedRef().getReference() + "+++Stamp:"
-//						+ atomicStamp.getAtomicStampedRef().getStamp());
-//			}
-//		});
-//
-//		try {
-//			TimeUnit.SECONDS.sleep(3);
-//		} catch (InterruptedException e) {
-//		}
-//		refT3.start();
-//		 
+		refT3.start();
+		refT4.start();
+		refT5.start(); 
+		refT6.start();
+		refT7.start(); 
 	}
 }
