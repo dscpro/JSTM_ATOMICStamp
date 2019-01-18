@@ -30,15 +30,7 @@ public class Transaction implements Serializable {
 
 	    private long version = 1;
 	 
-	    private Object newRef;
-		public Object getNewRef() {
-			return newRef;
-		}
-
-		public void setNewRef(Object newRef) {
-			this.newRef = newRef;
-		}
-
+	   
 	    private List<Participant> participants = new ArrayList<Participant>();
 
 	    private Map<String, Object> attachments = new ConcurrentHashMap<String, Object>();

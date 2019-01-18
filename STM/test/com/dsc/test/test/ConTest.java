@@ -17,7 +17,7 @@ public class ConTest {
 
 				tm.setTransactionRepository(atomicStamp);
 				tm.begin();
-				tm.getCurrentTransaction().setNewRef("邵帅");
+				//tm.getCurrentTransaction().setNewRef("邵帅");
 				System.out.println("邵帅" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
 						+ tm.getCurrentTransaction().getStatus());
 				 
@@ -38,7 +38,7 @@ public class ConTest {
 			public void run() {
 				tm.setTransactionRepository(atomicStamp);
 				tm.begin();
-				tm.getCurrentTransaction().setNewRef("刘欢");
+				//tm.getCurrentTransaction().setNewRef("刘欢");
 				System.out.println("刘欢" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
 						+ tm.getCurrentTransaction().getStatus());
  
@@ -59,7 +59,7 @@ public class ConTest {
 
 				tm.setTransactionRepository(atomicStamp);
 				tm.begin();
-				tm.getCurrentTransaction().setNewRef("宋成龙");
+				//tm.getCurrentTransaction().setNewRef("宋成龙");
 				System.out.println("宋成龙" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
 						+ tm.getCurrentTransaction().getStatus());
 				tm.commit(false);
@@ -74,8 +74,8 @@ public class ConTest {
 			public void run() {
 
 				tm.setTransactionRepository(atomicStamp);
-				tm.begin();
-				tm.getCurrentTransaction().setNewRef("宋成龙1");
+				//tm.begin();
+				//tm.getCurrentTransaction().setNewRef("宋成龙1");
 				System.out.println("宋成龙1" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
 						+ tm.getCurrentTransaction().getStatus());
 				tm.commit(false);
@@ -92,7 +92,7 @@ public class ConTest {
 
 				tm.setTransactionRepository(atomicStamp);
 				tm.begin();
-				tm.getCurrentTransaction().setNewRef("宋成龙2");
+				//tm.getCurrentTransaction().setNewRef("宋成龙2");
 				System.out.println("宋成龙2" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
 						+ tm.getCurrentTransaction().getStatus());
 				tm.commit(false);
@@ -109,7 +109,7 @@ public class ConTest {
 
 				tm.setTransactionRepository(atomicStamp);
 				tm.begin();
-				tm.getCurrentTransaction().setNewRef("宋成龙3");
+				//tm.getCurrentTransaction().setNewRef("宋成龙3");
 				System.out.println("宋成龙3" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
 						+ tm.getCurrentTransaction().getStatus());
 				tm.commit(false);
@@ -126,7 +126,7 @@ public class ConTest {
 
 				tm.setTransactionRepository(atomicStamp);
 				tm.begin();
-				tm.getCurrentTransaction().setNewRef("宋成龙4");
+				//tm.getCurrentTransaction().setNewRef("宋成龙4");
 				System.out.println("宋成龙4" + "事务版本号：" + tm.getCurrentTransaction().getVersion() + "事务状态："
 						+ tm.getCurrentTransaction().getStatus());
 				tm.commit(false);

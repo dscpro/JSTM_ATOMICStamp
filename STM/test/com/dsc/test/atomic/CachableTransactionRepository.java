@@ -27,11 +27,11 @@ public abstract class CachableTransactionRepository implements TransactionReposi
 	}
 
 	@Override
-	public int update(Transaction transaction) {
+	public int update(Transaction transaction,TransactionRepository transactionRepository) {
 		int result = 0;
 
 		try {
-			result = doUpdate(transaction);
+			result = doUpdate(transaction,transactionRepository);
 			if (result > 0) {
 				putToCache(transaction);
 			} else {
@@ -84,7 +84,7 @@ public abstract class CachableTransactionRepository implements TransactionReposi
 
 	protected abstract int doCreate(Transaction transaction);
 
-	protected abstract int doUpdate(Transaction transaction);
+	protected abstract int doUpdate(Transaction transaction,TransactionRepository transactionRepository);
 
 	protected abstract int doDelete(Transaction transaction);
 }

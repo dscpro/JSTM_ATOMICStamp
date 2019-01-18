@@ -8,7 +8,7 @@ import com.dsc.test.transaction.Transaction;
 public interface TransactionRepository {
 	   int create(Transaction transaction);
 
-	    int update(Transaction transaction);
+	    int update(Transaction transaction,TransactionRepository transactionRepository);
 //
         int delete(Transaction transaction);
 //

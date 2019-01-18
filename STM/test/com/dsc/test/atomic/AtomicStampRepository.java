@@ -16,8 +16,17 @@ public class AtomicStampRepository extends CachableTransactionRepository {
 	/**
 	 * ref
 	 */
-	Object initialRef;
-	Object oldwRef;
+	private Object initialRef;
+	private Object oldwRef;
+	private Object newRef;
+
+	public Object getNewRef() {
+		return newRef;
+	}
+
+	public void setNewRef(Object newRef) {
+		this.newRef = newRef;
+	}
 
 	public Object getOldRef() {
 		if (oldwRef == null)
@@ -51,7 +60,7 @@ public class AtomicStampRepository extends CachableTransactionRepository {
 
 	public AtomicStampRepository(Object initialRef) {
 		this.initialRef = initialRef;
-		this.setAtomicStampedRef();
+		this.initialAtomicStampedRef();
 	}
 
 	/**
@@ -68,7 +77,7 @@ public class AtomicStampRepository extends CachableTransactionRepository {
 		return atomicStampedRef;
 	}
 
-	public void setAtomicStampedRef() {
+	public void initialAtomicStampedRef() {
 		this.atomicStampedRef = new AtomicStampedReference<Object>(initialRef, stampValue);
 	}
 
@@ -79,15 +88,16 @@ public class AtomicStampRepository extends CachableTransactionRepository {
 	}
 
 	@Override
-	protected int doUpdate(Transaction transaction) {
-	
-		boolean flag = atomicStampedRef.compareAndSet(this.getOldRef(), transaction.getNewRef(),
-				atomicStampedRef.getStamp(), atomicStampedRef.getStamp() + 1);
-		
-	    if (flag) {
+	protected int doUpdate(Transaction transaction,TransactionRepository transactionRepository) {
+		AtomicStampRepository atmoicstamp  = (AtomicStampRepository) transactionRepository;
+				
+		boolean flag = atmoicstamp.getAtomicStampedRef().compareAndSet(atmoicstamp.getOldRef(), atmoicstamp.getNewRef(), atmoicstamp.getStampValue(),
+				atmoicstamp.getAtomicStampedRef().getStamp() + 1);		
+		if (flag) {
 			transaction.updateVersion();
 			transaction.updateTime();
-		 	//this.setOldRef(atomicStampedRef.getReference());
+			// this.setOldRef(atomicStampedRef.getReference());
+			atmoicstamp.setStampValue(atomicStampedRef.getStamp());
 			return 1;
 		} else {
 			return 0;
@@ -100,5 +110,7 @@ public class AtomicStampRepository extends CachableTransactionRepository {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+ 
 
 }
